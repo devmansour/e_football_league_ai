@@ -209,7 +209,7 @@ async function loadAdminDashboard() {
     });
     const data = await res.json();
 
-    renderTeamsList(data.teams);
+    renderTeamsList(data.teams, data.matches.length > 0);
     renderAdminMatches(data.matches);
   } catch {
     document.getElementById('teams-list').innerHTML    = '<p style="color:var(--danger)">Failed to load data.</p>';
@@ -217,17 +217,18 @@ async function loadAdminDashboard() {
   }
 }
 
-function renderTeamsList(teams) {
+function renderTeamsList(teams, fixturesExist) {
   const el = document.getElementById('teams-list');
   if (!teams.length) { el.innerHTML = '<p style="color:var(--sub)">No teams registered yet.</p>'; return; }
 
   el.innerHTML = teams.map((t, i) => `
-    <div class="team-row">
+    <div class="team-row" id="team-row-${t._id}">
       <span class="team-num">#${i + 1}</span>
       <div class="team-info">
         <strong>${t.teamName}</strong>
         <span>${t.playerName} · ⭐ ${t.favPlayer}</span>
       </div>
+      ${!fixturesExist ? `<button class="btn-delete-team" onclick="deleteTeam('${t._id}', '${t.teamName}')">🗑️</button>` : ''}
     </div>
   `).join('');
 }
@@ -326,3 +327,33 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(updateStatus, 30000); // refresh every 30s
 });
 
+// ── DELETE TEAM ──
+async function deleteTeam(teamId, teamName) {
+  if (!confirm(`Remove "${teamName}" from the tournament?`)) return;
+
+  try {
+    const res  = await fetch(`/api/admin/team/${teamId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-user': adminCredentials.username,
+        'x-admin-pass': adminCredentials.password
+      }
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error);
+      return;
+    }
+
+    // Remove row from DOM instantly
+    const row = document.getElementById(`team-row-${teamId}`);
+    if (row) row.remove();
+
+    // Update status bar
+    updateStatus();
+  } catch {
+    alert('Server error. Try again.');
+  }
+}
