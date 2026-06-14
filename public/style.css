@@ -416,3 +416,20 @@ footer a:hover { text-decoration: underline; }
   .match-card { flex-wrap: wrap; }
 }
 
+/* ── DELETE TEAM BUTTON ── */
+.btn-delete-team {
+  background: transparent;
+  border: 1px solid rgba(255,82,82,0.3);
+  color: var(--danger);
+  border-radius: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.btn-delete-team:hover {
+  background: rgba(255,82,82,0.15);
+  border-color: var(--danger);
+}
