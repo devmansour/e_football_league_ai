@@ -17,6 +17,21 @@ router.post('/login', (req, res) => {
   res.status(401).json({ error: 'Invalid credentials' });
 });
 
+// DELETE — remove a team (only before fixtures are generated)
+router.delete('/team/:id', auth, async (req, res) => {
+  try {
+    const fixturesExist = await Match.findOne();
+    if (fixturesExist) {
+      return res.status(400).json({ error: 'Cannot remove teams after fixtures have been generated.' });
+    }
+    await Team.findByIdAndDelete(req.params.id);
+    const count = await Team.countDocuments();
+    res.json({ success: true, count });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // POST — submit match result
 router.post('/result', auth, async (req, res) => {
   try {
@@ -41,9 +56,8 @@ router.post('/result', auth, async (req, res) => {
     match.status  = 'completed';
     await match.save();
 
-    // Check if all matches in this round are done
-    const roundMatches    = await Match.find({ round: match.round });
-    const allDone         = roundMatches.every(m => m.status === 'completed');
+    const roundMatches = await Match.find({ round: match.round });
+    const allDone      = roundMatches.every(m => m.status === 'completed');
 
     if (allDone) {
       await generateNextRound(match.round);
@@ -67,4 +81,3 @@ router.get('/matches', auth, async (req, res) => {
 });
 
 module.exports = router;
-
