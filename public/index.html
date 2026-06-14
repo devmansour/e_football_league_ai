@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>eFootball Tournament</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background overlay -->
+  <div class="bg-overlay"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">⚽ eFOOTBALL TOURNAMENT</div>
+    <nav>
+      <button class="nav-btn active" onclick="showPanel('register')">Register</button>
+      <button class="nav-btn" onclick="showPanel('fixtures')">Fixtures</button>
+      <button class="nav-btn" onclick="showPanel('admin')">Admin</button>
+    </nav>
+  </header>
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span id="statusText">Loading tournament status...</span>
+  </div>
+
+  <!-- PANELS -->
+  <main>
+
+    <!-- REGISTER PANEL -->
+    <section id="panel-register" class="panel active">
+      <div class="panel-card">
+        <h2>🎮 Register Your Team</h2>
+        <p class="panel-sub">Secure your spot in the tournament</p>
+
+        <div id="reg-closed-msg" class="alert alert-warning" style="display:none">
+          ⚠️ Registration is closed. All 32 teams have been registered.
+        </div>
+
+        <div id="reg-form-wrap">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" id="playerName" placeholder="e.g. John Doe" />
+          </div>
+          <div class="form-group">
+            <label>Team Name</label>
+            <input type="text" id="teamName" placeholder="e.g. FC Barcelona" />
+          </div>
+          <div class="form-group">
+            <label>Favourite Player</label>
+            <input type="text" id="favPlayer" placeholder="e.g. Vinicius Jr." />
+          </div>
+          <button class="btn-primary" onclick="registerTeam()">⚡ Register Now</button>
+        </div>
+
+        <div id="reg-success" class="alert alert-success" style="display:none"></div>
+        <div id="reg-error" class="alert alert-error" style="display:none"></div>
+      </div>
+    </section>
+
+    <!-- FIXTURES PANEL -->
+    <section id="panel-fixtures" class="panel">
+      <div class="panel-card">
+        <h2>🏆 Tournament Fixtures</h2>
+        <p class="panel-sub">Knockout bracket — 32 teams</p>
+
+        <div id="fixtures-loading" style="display:none" class="loading-wrap">
+          <div class="spinner"></div>
+          <p class="loading-text">⚙️ Generating fixtures... let the battle begin</p>
+        </div>
+
+        <div id="fixtures-waiting" class="alert alert-info">
+          ⏳ Waiting for all 32 teams to register before fixtures are generated.
+        </div>
+
+        <div id="fixtures-container"></div>
+      </div>
+    </section>
+
+    <!-- ADMIN PANEL -->
+    <section id="panel-admin" class="panel">
+      <div class="panel-card">
+        <h2>🔐 Admin Panel</h2>
+        <p class="panel-sub">Tournament management</p>
+
+        <!-- Login Form -->
+        <div id="admin-login">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="adminUser" placeholder="Admin username" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="adminPass" placeholder="••••••••" />
+          </div>
+          <button class="btn-primary" onclick="adminLogin()">🔓 Login</button>
+          <div id="login-error" class="alert alert-error" style="display:none">Invalid credentials.</div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="admin-dashboard" style="display:none">
+          <button class="btn-secondary" onclick="adminLogout()">Logout</button>
+
+          <h3 class="section-title">📋 Registered Teams</h3>
+          <div id="teams-list"></div>
+
+          <h3 class="section-title">⚽ Enter Match Results</h3>
+          <div id="admin-matches"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>To join the tournament, contact: <a href="https://wa.me/255793157892">+255793157892</a> (WhatsApp)</p>
+    <p class="dev-credit">Developed by <strong>Dead Xmile</strong></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
