@@ -22,8 +22,8 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Registration is closed. 32 teams reached.' });
     }
 
-    const { playerName, teamName, favPlayer } = req.body;
-    if (!playerName || !teamName || !favPlayer) {
+    const { playerName, teamName, favPlayer, phone } = req.body;
+    if (!playerName || !teamName || !favPlayer || !phone) {
       return res.status(400).json({ error: 'All fields are required.' });
     }
 
@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Team name already registered.' });
     }
 
-    const team = new Team({ playerName, teamName, favPlayer });
+    const team = new Team({ playerName, teamName, favPlayer, phone });
     await team.save();
 
     const newCount = await Team.countDocuments();
@@ -54,4 +54,3 @@ router.get('/all', async (req, res) => {
 });
 
 module.exports = router;
-
